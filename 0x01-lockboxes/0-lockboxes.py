@@ -1,16 +1,20 @@
 #!/usr/bin/python3
+'''
+Lockboxes module.
+'''
 
 def canUnlockAll(boxes):
-    unlocked_boxes = [False] * len(boxes)
-    unlocked_boxes[0] = True
-    keys_stack = [0]
-
-    while keys_stack:
-        current_box = keys_stack.pop()
-
-        for key in boxes[current_box]:
-            if 0 <= key < len(boxes) and not unlocked_boxes[key]:
-                unlocked_boxes[key] = True
-                keys_stack.append(key)
-
-    return all(unlocked_boxes)
+    '''
+    Checks if all the boxes in a list of boxes containing the keys (indices) to other boxes can be unlocked given that the first box is unlocked.
+    '''
+    n = len(boxes)
+    seen_boxes = set([0])
+    unseen_boxes = set(boxes[0]).difference(set([0]))
+    while len(unseen_boxes) > 0:
+        boxIdx = unseen_boxes.pop()
+        if not boxIdx or boxIdx >= n or boxIdx < 0:
+            continue
+        if boxIdx not in seen_boxes:
+            unseen_boxes = unseen_boxes.union(boxes[boxIdx])
+            seen_boxes.add(boxIdx)
+    return n == len(seen_boxes)
